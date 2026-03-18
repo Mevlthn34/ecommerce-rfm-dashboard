@@ -10,6 +10,8 @@ def load_data():
     df["UnitPrice"] = pd.to_numeric(df["UnitPrice"], errors="coerce")
 
     df = df.dropna()
+    df = df[df['Quantity'] > 0]
+    df = df[df['UnitPrice'] > 0]
     df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"], dayfirst=True)
     df["StockCode"] = df["StockCode"].astype(str)
     return df
@@ -44,7 +46,8 @@ rfm = df.groupby("CustomerID").agg({
 })
 
 rfm.columns = ["Recency", "Frequency", "Monetary"]
-
+rfm = rfm[rfm["Monetary"] > 0]
+rfm = rfm[rfm["Frequency"] > 0]
 # RFM SKOR
 rfm["R_Score"] = pd.qcut(rfm["Recency"], 5, labels=[5,4,3,2,1])
 rfm["F_Score"] = pd.qcut(rfm["Frequency"].rank(method="first"), 5, labels=[1,2,3,4,5])
@@ -102,7 +105,7 @@ st.subheader("📈 Frequency vs Monetary")
 fig, ax = plt.subplots()
 
 ax.scatter(rfm["Frequency"], rfm["Monetary"])
-
+ax.set_title("Customer Segmentation: Frequency vs Monetary")
 ax.set_xlabel("Frequency")
 ax.set_ylabel("Monetary")
 

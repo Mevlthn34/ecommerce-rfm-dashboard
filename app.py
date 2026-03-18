@@ -104,7 +104,15 @@ st.subheader("📈 Frequency vs Monetary")
 
 fig, ax = plt.subplots()
 
-ax.scatter(rfm["Frequency"], rfm["Monetary"])
+import seaborn as sns
+
+sns.scatterplot(
+    x="Frequency",
+    y="Monetary",
+    hue="Segment",
+    data=rfm,
+    ax=ax
+)
 ax.set_title("Customer Segmentation: Frequency vs Monetary")
 ax.set_xlabel("Frequency")
 ax.set_ylabel("Monetary")
